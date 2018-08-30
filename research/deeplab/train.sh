@@ -22,12 +22,14 @@ python train.py \
     --atrous_rates=18 \
     --output_stride=16 \
     --decoder_output_stride=4 \
-    --train_crop_size=1000 \
-    --train_crop_size=1000 \
+    --train_crop_size=301 \
+    --train_crop_size=301 \
+    --min_resize_factor=0.5 \
+    --max_resize_factor=2.0 \
     --train_batch_size=4 \
     --fine_tune_batch_norm=False \
-    --tf_initial_checkpoint="models/check_localization_mobilenetv2_coco_voc/model.ckpt-25921.index" \
-    --train_logdir="models/check_localization_mobilenetv2_coco_voc" \
+    --tf_initial_checkpoint="models/check_localization_mobilenetv2_coco_voc/model.ckpt-49238.index" \
+    --train_logdir="models/check_localization_mobilenetv2_coco_voc_resized300" \
     --dataset_dir="datasets/check_localization/tfrecord"
 
 ## --tf_initial_checkpoint="../slim/checkpoints/inception_resnet_v2/inception_resnet_v2_2016_08_30.ckpt" \

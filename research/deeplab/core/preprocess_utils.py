@@ -443,13 +443,17 @@ def resize_to_range(image,
       new_tensor_list.append(None)
     return new_tensor_list
 
-def random_orient(image, interpolation='BILINEAR'):
+def random_orient(image, label):
     import random, math
     angle = random.choice([0, 90, 180, 270])
     if angle == 0:
         pass
     else:
         image = tf.expand_dims(image, 0)
-        image = tf.contrib.image.rotate(image, angle * math.pi / 180, interpolation=interpolation)
+        image = tf.contrib.image.rotate(image, angle * math.pi / 180, interpolation='BILINEAR')
         image = tf.squeeze(image, 0)
-    return image
+
+        label = tf.expand_dims(label, 0)
+        label = tf.contrib.image.rotate(label, angle * math.pi / 180, interpolation='NEAREST')
+        label = tf.squeeze(label, 0)
+    return image, label
