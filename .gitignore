@@ -1,3 +1,6 @@
+research/deeplab/datasets/check_localization
+research/deeplab/models
+
 # Byte-compiled / optimized / DLL files
 __pycache__/
 *.py[cod]

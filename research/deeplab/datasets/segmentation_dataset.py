@@ -108,11 +108,20 @@ _ADE20K_INFORMATION = DatasetDescriptor(
     ignore_label=0,
 )
 
+_CHECK_LOCALIZATION_INFORMATION = DatasetDescriptor(
+    splits_to_sizes={
+        'train': 8867,
+        'val': 2217,
+    },
+    num_classes=2,
+    ignore_label=255,
+)
 
 _DATASETS_INFORMATION = {
     'cityscapes': _CITYSCAPES_INFORMATION,
     'pascal_voc_seg': _PASCAL_VOC_SEG_INFORMATION,
     'ade20k': _ADE20K_INFORMATION,
+    'check_localization': _CHECK_LOCALIZATION_INFORMATION,
 }
 
 # Default file pattern of TFRecord of TensorFlow Example.
@@ -138,7 +147,7 @@ def get_dataset(dataset_name, split_name, dataset_dir):
     ValueError: if the dataset_name or split_name is not recognized.
   """
   if dataset_name not in _DATASETS_INFORMATION:
-    raise ValueError('The specified dataset is not supported yet.')
+    raise ValueError('The dataset {} is not supported yet.'.format(dataset_name))
 
   splits_to_sizes = _DATASETS_INFORMATION[dataset_name].splits_to_sizes
 

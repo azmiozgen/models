@@ -32,6 +32,7 @@ The Example proto contains the following fields:
 import collections
 import six
 import tensorflow as tf
+import numpy as np
 
 FLAGS = tf.app.flags.FLAGS
 
@@ -61,14 +62,17 @@ class ImageReader(object):
     """
     with tf.Graph().as_default():
       self._decode_data = tf.placeholder(dtype=tf.string)
+      self._encode_data = tf.placeholder(dtype=tf.uint8)
       self._image_format = image_format
       self._session = tf.Session()
       if self._image_format in ('jpeg', 'jpg'):
         self._decode = tf.image.decode_jpeg(self._decode_data,
                                             channels=channels)
+        self._encode = tf.image.encode_jpeg(self._encode_data)
       elif self._image_format == 'png':
         self._decode = tf.image.decode_png(self._decode_data,
                                            channels=channels)
+        self._encode = tf.image.encode_png(self._encode_data)
 
   def read_image_dims(self, image_data):
     """Reads the image dimensions.
@@ -96,11 +100,39 @@ class ImageReader(object):
     """
     image = self._session.run(self._decode,
                               feed_dict={self._decode_data: image_data})
+
     if len(image.shape) != 3 or image.shape[2] not in (1, 3):
       raise ValueError('The image channels not supported.')
 
     return image
 
+  def encode_image(self, image):
+    
+    if len(image.shape) != 3 or image.shape[2] not in (1, 3):
+      raise ValueError('The image channels not supported.')
+
+    with tf.Session().as_default():
+        image = image.eval()
+    image_data = self._session.run(self._encode,
+                                   feed_dict={self._encode_data: image})
+    return image_data
+
+def resize_image(img, size=300):
+    '''
+    Resize images as keeping aspect ratio.
+    '''
+    shape = img.shape[:2]
+    channel = img.shape[2]
+    ratio = np.min(shape) / float(size)
+    new_shape = list((np.array(shape) / ratio).astype('int'))
+
+    img = tf.expand_dims(img, 0) ## [1, width, height, channel]
+    if channel == 3:
+        img = tf.image.resize_images(img, size=new_shape, method=tf.image.ResizeMethod.BILINEAR, align_corners=False)
+    elif channel == 1:
+        img = tf.image.resize_images(img, size=new_shape, method=tf.image.ResizeMethod.NEAREST_NEIGHBOR, align_corners=False)
+    img = tf.squeeze(img, 0)
+    return img
 
 def _int64_list_feature(values):
   """Returns a TF-Feature of int64_list.

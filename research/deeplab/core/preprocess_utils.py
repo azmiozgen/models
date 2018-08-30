@@ -16,7 +16,6 @@
 """Utility functions related to preprocessing inputs."""
 import tensorflow as tf
 
-
 def flip_dim(tensor_list, prob=0.5, dim=1):
   """Randomly flips a dimension of the given tensor.
 
@@ -443,3 +442,14 @@ def resize_to_range(image,
     else:
       new_tensor_list.append(None)
     return new_tensor_list
+
+def random_orient(image, interpolation='BILINEAR'):
+    import random, math
+    angle = random.choice([0, 90, 180, 270])
+    if angle == 0:
+        pass
+    else:
+        image = tf.expand_dims(image, 0)
+        image = tf.contrib.image.rotate(image, angle * math.pi / 180, interpolation=interpolation)
+        image = tf.squeeze(image, 0)
+    return image

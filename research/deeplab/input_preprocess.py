@@ -135,4 +135,8 @@ def preprocess_image_and_label(image,
     processed_image, label, _ = preprocess_utils.flip_dim(
         [processed_image, label], _PROB_OF_FLIP, dim=1)
 
+    ## Randomly change orientation
+    processed_image = preprocess_utils.random_orient(processed_image, interpolation='BILINEAR')
+    label = preprocess_utils.random_orient(label, interpolation='NEAREST')
+
   return original_image, processed_image, label

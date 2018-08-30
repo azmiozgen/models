@@ -185,6 +185,7 @@ def _build_deeplab(inputs_queue, outputs_to_num_classes, ignore_label):
       then the keys would include 'merged_logits', 'logits_1.00' and
       'logits_1.50'.
   """
+
   samples = inputs_queue.dequeue()
 
   # Add name to input and label nodes so we can add to summary.
@@ -235,6 +236,9 @@ def main(unused_argv):
       num_replicas=FLAGS.num_replicas,
       num_ps_tasks=FLAGS.num_ps_tasks)
 
+  config_ = tf.ConfigProto()
+  config_.gpu_options.per_process_gpu_memory_fraction = 0.9
+
   # Split the batch across GPUs.
   assert FLAGS.train_batch_size % config.num_clones == 0, (
       'Training batch size not divisble by number of clones (GPUs).')
@@ -242,6 +246,7 @@ def main(unused_argv):
   clone_batch_size = FLAGS.train_batch_size // config.num_clones
 
   # Get dataset-dependent information.
+  print("DATASET:", FLAGS.dataset)
   dataset = segmentation_dataset.get_dataset(
       FLAGS.dataset, FLAGS.train_split, dataset_dir=FLAGS.dataset_dir)
 
@@ -388,6 +393,7 @@ def main(unused_argv):
 
 
 if __name__ == '__main__':
+#  print("DATASET:", flags.dataset)
   flags.mark_flag_as_required('train_logdir')
   flags.mark_flag_as_required('tf_initial_checkpoint')
   flags.mark_flag_as_required('dataset_dir')
