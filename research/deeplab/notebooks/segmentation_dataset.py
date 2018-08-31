@@ -114,7 +114,7 @@ _CHECK_LOCALIZATION_INFORMATION = DatasetDescriptor(
         'val': 2217,
     },
     num_classes=2,
-    ignore_label=2,
+    ignore_label=255,
 )
 
 _DATASETS_INFORMATION = {

@@ -81,6 +81,14 @@ def preprocess_image_and_label(image,
   if label is not None:
     label = tf.cast(label, tf.int32)
 
+  if is_training:
+    # Randomly left-right flip the image and label.
+    processed_image, label, _ = preprocess_utils.flip_dim(
+        [processed_image, label], _PROB_OF_FLIP, dim=1)
+
+    ## Randomly change orientation
+    processed_image, label = preprocess_utils.random_orient_and_resize(processed_image, label)
+
   # Resize image and label to the desired range.
   if min_resize_value is not None or max_resize_value is not None:
     [processed_image, label] = (
@@ -102,6 +110,7 @@ def preprocess_image_and_label(image,
         processed_image, label, scale)
     processed_image.set_shape([None, None, 3])
 
+  
   # Pad image and label to have dimensions >= [crop_height, crop_width]
   image_shape = tf.shape(processed_image)
   image_height = image_shape[0]
@@ -129,13 +138,5 @@ def preprocess_image_and_label(image,
 
   if label is not None:
     label.set_shape([crop_height, crop_width, 1])
-
-  if is_training:
-    # Randomly left-right flip the image and label.
-    processed_image, label, _ = preprocess_utils.flip_dim(
-        [processed_image, label], _PROB_OF_FLIP, dim=1)
-
-    ## Randomly change orientation
-    processed_image, label = preprocess_utils.random_orient(processed_image, label)
 
   return original_image, processed_image, label

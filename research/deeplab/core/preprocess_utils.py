@@ -443,17 +443,34 @@ def resize_to_range(image,
       new_tensor_list.append(None)
     return new_tensor_list
 
-def random_orient(image, label):
-    import random, math
-    angle = random.choice([0, 90, 180, 270])
-    if angle == 0:
-        pass
-    else:
-        image = tf.expand_dims(image, 0)
-        image = tf.contrib.image.rotate(image, angle * math.pi / 180, interpolation='BILINEAR')
-        image = tf.squeeze(image, 0)
+def random_orient_and_resize(image, label, size=[400, 624]):
+    import random
+    n_rot = random.choice([0, 1, 2, 3])
 
-        label = tf.expand_dims(label, 0)
-        label = tf.contrib.image.rotate(label, angle * math.pi / 180, interpolation='NEAREST')
-        label = tf.squeeze(label, 0)
+    ## Image
+    if n_rot != 0:
+        image = tf.image.rot90(image, k=n_rot)
+        label = tf.image.rot90(label, k=n_rot)
+#    height, width = image.shape[:2]
+
+#    image = tf.expand_dims(image, 0)
+    image = tf.image.resize_images(image, size=size, method=tf.image.ResizeMethod.BILINEAR, align_corners=False)
+    #if width > height:
+    #    image = tf.image.resize_images(image, size, method=tf.image.ResizeMethod.BILINEAR, align_corners=False)
+    #else:
+    #    image = tf.image.resize_images(image, (size[1], size[0]), method=tf.image.ResizeMethod.BILINEAR, align_corners=False)
+#    image = tf.squeeze(image, 0)
+
+    ## Label
+    #label = tf.contrib.image.rotate(label, angle * math.pi / 180, interpolation='NEAREST')
+#    height, width = label.shape[:2]
+    
+#    label = tf.expand_dims(label, 0)
+    label = tf.image.resize_images(label, size=size, method=tf.image.ResizeMethod.NEAREST_NEIGHBOR, align_corners=False)
+    #if width > height:
+    #    label = tf.image.resize_images(label, size, method=tf.image.ResizeMethod.NEAREST_NEIGHBOR, align_corners=False)
+    #else:
+    #    label = tf.image.resize_images(label, (size[1], size[0]), method=tf.image.ResizeMethod.NEAREST_NEIGHBOR, align_corners=False)
+#    label = tf.squeeze(label, 0)
+
     return image, label

@@ -1,5 +1,6 @@
 research/deeplab/datasets/check_localization
 research/deeplab/models
+*.sh
 
 # Byte-compiled / optimized / DLL files
 __pycache__/

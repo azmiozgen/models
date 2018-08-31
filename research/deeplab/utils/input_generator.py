@@ -121,6 +121,7 @@ def get(dataset,
       shuffle=is_training)
   image, label, image_name, height, width = _get_data(data_provider,
                                                       dataset_split)
+
   if label is not None:
     if label.shape.ndims == 2:
       label = tf.expand_dims(label, 2)
@@ -166,3 +167,53 @@ def get(dataset,
       capacity=32 * batch_size,
       allow_smaller_final_batch=not is_training,
       dynamic_pad=True)
+
+if __name__ == "__main__":
+    from deeplab.datasets import segmentation_dataset
+    import cv2
+
+    dataset = segmentation_dataset.get_dataset('check_localization', 'train', "../datasets/check_localization/tfrecord")
+
+    
+    is_training = True
+    SAVE = True
+    data_provider = dataset_data_provider.DatasetDataProvider(
+      dataset,
+      num_readers=1,
+      num_epochs=None if is_training else 1,
+      shuffle=is_training)
+   
+    
+    image, label, image_name, height, width = _get_data(data_provider, 'train')
+
+    '''
+    label.set_shape([None, None, 1])
+    original_image, image, label = input_preprocess.preprocess_image_and_label(
+      image,
+      label,
+      crop_height=300,
+      crop_width=300,
+      min_resize_value=300,
+      max_resize_value=300,
+      resize_factor=1.0,
+      min_scale_factor=1.0,
+      max_scale_factor=1.0,
+      scale_factor_step_size=None,
+      ignore_label=dataset.ignore_label,
+      is_training=is_training,
+      model_variant=None)
+  
+    sample = {
+      'image': image,
+      'image_name': image_name,
+      'height': height,
+      'width': width
+  	}
+    '''
+
+    print("IMAGE SHAPE:", image.shape)
+    
+    if SAVE:
+        with tf.Session().as_default():
+            image = image.eval()
+        cv2.imwrite("image_test.py", image)

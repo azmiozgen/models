@@ -4,6 +4,7 @@ import sys
 import build_data
 import tensorflow as tf
 import numpy as np
+import cv2
 
 os.environ['TF_CPP_MIN_LOG_LEVEL'] = '3'
 
@@ -25,7 +26,7 @@ tf.app.flags.DEFINE_string(
 
 tf.app.flags.DEFINE_string(
     'output_dir',
-    './check_localization/tfrecord',
+    './check_localization/tfrecord-test',
     'Path to save converted SSTable of TensorFlow examples.')
 
 _NUM_SHARDS = 32
@@ -94,6 +95,12 @@ def _convert_dataset(dataset_split):
         ## Resize image
         image = image_reader.decode_image(image_data)
         image = resize_image(image)
+        image = tf.image.resize_images(image, size=[400, 624], method=tf.image.ResizeMethod.BILINEAR, align_corners=False)
+
+        with tf.Session().as_default():
+            img = image.eval()
+        cv2.imwrite("check_localization/test_images/tfrecord-test-image-{}.png".format(i), img)
+
         height, width = image.shape[:2]
         image_data = image_reader.encode_image(image)
 
@@ -108,6 +115,12 @@ def _convert_dataset(dataset_split):
         ## Resize mask
         seg_image = label_reader.decode_image(seg_data)
         seg_image = resize_image(seg_image)
+        seg_image = tf.image.resize_images(seg_image, size=[400, 624], method=tf.image.ResizeMethod.BILINEAR, align_corners=False)
+
+        with tf.Session().as_default():
+            mask = seg_image.eval()
+        cv2.imwrite("check_localization/test_images/tfrecord-test-annot-{}.png".format(i), mask)
+        
         seg_height, seg_width = seg_image.shape[:2]
         seg_data = label_reader.encode_image(seg_image)
 
@@ -124,6 +137,8 @@ def _convert_dataset(dataset_split):
     sys.stdout.flush()
 
     del example, tfrecord_writer, 
+
+    break
 
 def main(unused_argv):
   dataset_splits = tf.gfile.Glob(os.path.join(FLAGS.list_folder, '*.txt'))
