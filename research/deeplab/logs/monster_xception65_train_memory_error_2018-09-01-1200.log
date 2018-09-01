@@ -1,0 +1,60 @@
+Limit:                  7968492749
+InUse:                  7903128576
+MaxInUse:               7947539968
+NumAllocs:               106679302
+MaxAllocSize:           1228931072
+
+2018-09-01 11:56:54.774822: W tensorflow/core/common_runtime/bfc_allocator.cc:279] **********************************x**************************************************x**************
+2018-09-01 11:56:54.774851: W tensorflow/core/framework/op_kernel.cc:1318] OP_REQUIRES failed at conv_ops.cc:398 : Resource exhausted: OOM when allocating tensor with shape[4,256,100,156] and type float on /job:localhost/replica:0/task:0/device:GPU:0 by allocator GPU_0_bfc
+INFO:tensorflow:Error reported to Coordinator: <class 'tensorflow.python.framework.errors_impl.ResourceExhaustedError'>, OOM when allocating tensor with shape[4,100,156,256] and type float on /job:localhost/replica:0/task:0/device:GPU:0 by allocator GPU_0_bfc
+         [[Node: decoder/decoder_conv1_depthwise/depthwise-0-1-TransposeNCHWToNHWC-LayoutOptimizer = Transpose[T=DT_FLOAT, Tperm=DT_INT32, _device="/job:localhost/replica:0/task:0/device:GPU:0"](decoder/decoder_conv1_depthwise/depthwise, PermConstNCHWToNHWC-LayoutOptimizer)]]
+Hint: If you want to see a list of allocated tensors when OOM happens, add report_tensor_allocations_upon_oom to RunOptions for current allocation info.
+
+         [[Node: gradients/xception_65/middle_flow/block1/unit_4/xception_module/separable_conv2_pointwise/BatchNorm/FusedBatchNorm_grad/FusedBatchNormGrad/_4503 = _Recv[client_terminated=false, recv_device="/job:localhost/replica:0/task:0/device:CPU:0", send_device="/job:localhost
+/replica:0/task:0/device:GPU:0", send_device_incarnation=1, tensor_name="edge_6932_...chNormGrad", tensor_type=DT_FLOAT, _device="/job:localhost/replica:0/task:0/device:CPU:0"]()]]
+Hint: If you want to see a list of allocated tensors when OOM happens, add report_tensor_allocations_upon_oom to RunOptions for current allocation info.
+
+Traceback (most recent call last):
+  File "/home/azmi/miniconda3/envs/tf/lib/python3.6/site-packages/tensorflow/python/client/session.py", line 1322, in _do_call
+    return fn(*args)
+  File "/home/azmi/miniconda3/envs/tf/lib/python3.6/site-packages/tensorflow/python/client/session.py", line 1307, in _run_fn
+    options, feed_dict, fetch_list, target_list, run_metadata)
+  File "/home/azmi/miniconda3/envs/tf/lib/python3.6/site-packages/tensorflow/python/client/session.py", line 1409, in _call_tf_sessionrun
+    run_metadata)
+tensorflow.python.framework.errors_impl.ResourceExhaustedError: OOM when allocating tensor with shape[4,100,156,256] and type float on /job:localhost/replica:0/task:0/device:GPU:0 by allocator GPU_0_bfc
+         [[Node: decoder/decoder_conv1_depthwise/depthwise-0-1-TransposeNCHWToNHWC-LayoutOptimizer = Transpose[T=DT_FLOAT, Tperm=DT_INT32, _device="/job:localhost/replica:0/task:0/device:GPU:0"](decoder/decoder_conv1_depthwise/depthwise, PermConstNCHWToNHWC-LayoutOptimizer)]]
+Hint: If you want to see a list of allocated tensors when OOM happens, add report_tensor_allocations_upon_oom to RunOptions for current allocation info.
+
+         [[Node: gradients/xception_65/middle_flow/block1/unit_4/xception_module/separable_conv2_pointwise/BatchNorm/FusedBatchNorm_grad/FusedBatchNormGrad/_4503 = _Recv[client_terminated=false, recv_device="/job:localhost/replica:0/task:0/device:CPU:0", send_device="/job:localhost
+/replica:0/task:0/device:GPU:0", send_device_incarnation=1, tensor_name="edge_6932_...chNormGrad", tensor_type=DT_FLOAT, _device="/job:localhost/replica:0/task:0/device:CPU:0"]()]]
+Hint: If you want to see a list of allocated tensors when OOM happens, add report_tensor_allocations_upon_oom to RunOptions for current allocation info.
+
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "train.py", line 400, in <module>
+    tf.app.run()
+  File "/home/azmi/miniconda3/envs/tf/lib/python3.6/site-packages/tensorflow/python/platform/app.py", line 125, in run
+    _sys.exit(main(argv))
+  File "train.py", line 392, in main
+    save_interval_secs=FLAGS.save_interval_secs)
+  File "/home/azmi/miniconda3/envs/tf/lib/python3.6/site-packages/tensorflow/contrib/slim/python/slim/learning.py", line 770, in train
+    sess, train_op, global_step, train_step_kwargs)
+  File "/home/azmi/miniconda3/envs/tf/lib/python3.6/site-packages/tensorflow/contrib/slim/python/slim/learning.py", line 487, in train_step
+    run_metadata=run_metadata)
+  File "/home/azmi/miniconda3/envs/tf/lib/python3.6/site-packages/tensorflow/python/client/session.py", line 900, in run
+    run_metadata_ptr)
+  File "/home/azmi/miniconda3/envs/tf/lib/python3.6/site-packages/tensorflow/python/client/session.py", line 1135, in _run
+    feed_dict_tensor, options, run_metadata)
+  File "/home/azmi/miniconda3/envs/tf/lib/python3.6/site-packages/tensorflow/python/client/session.py", line 1316, in _do_run
+    run_metadata)
+  File "/home/azmi/miniconda3/envs/tf/lib/python3.6/site-packages/tensorflow/python/client/session.py", line 1335, in _do_call
+    raise type(e)(node_def, op, message)
+tensorflow.python.framework.errors_impl.ResourceExhaustedError: OOM when allocating tensor with shape[4,100,156,256] and type float on /job:localhost/replica:0/task:0/device:GPU:0 by allocator GPU_0_bfc
+         [[Node: decoder/decoder_conv1_depthwise/depthwise-0-1-TransposeNCHWToNHWC-LayoutOptimizer = Transpose[T=DT_FLOAT, Tperm=DT_INT32, _device="/job:localhost/replica:0/task:0/device:GPU:0"](decoder/decoder_conv1_depthwise/depthwise, PermConstNCHWToNHWC-LayoutOptimizer)]]
+Hint: If you want to see a list of allocated tensors when OOM happens, add report_tensor_allocations_upon_oom to RunOptions for current allocation info.
+
+         [[Node: gradients/xception_65/middle_flow/block1/unit_4/xception_module/separable_conv2_pointwise/BatchNorm/FusedBatchNorm_grad/FusedBatchNormGrad/_4503 = _Recv[client_terminated=false, recv_device="/job:localhost/replica:0/task:0/device:CPU:0", send_device="/job:localhost
+/replica:0/task:0/device:GPU:0", send_device_incarnation=1, tensor_name="edge_6932_...chNormGrad", tensor_type=DT_FLOAT, _device="/job:localhost/replica:0/task:0/device:CPU:0"]()]]
+Hint: If you want to see a list of allocated tensors when OOM happens, add report_tensor_allocations_upon_oom to RunOptions for current allocation info.

@@ -1,6 +1,6 @@
 research/deeplab/datasets/check_localization
 research/deeplab/models
-*.sh
+research/deeplab/train.sh
 
 # Byte-compiled / optimized / DLL files
 __pycache__/
@@ -54,7 +54,6 @@ coverage.xml
 *.pot
 
 # Django stuff:
-*.log
 local_settings.py
 
 # Flask stuff:
